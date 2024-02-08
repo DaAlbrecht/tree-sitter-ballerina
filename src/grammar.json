@@ -57,27 +57,6 @@
           "name": "module_name"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "as"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "import_prefix"
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
           "type": "STRING",
           "value": ";"
         }
@@ -106,8 +85,34 @@
               "value": "."
             },
             {
-              "type": "SYMBOL",
-              "name": "identifier"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "'"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "as"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                }
+              ]
             }
           ]
         }
@@ -134,7 +139,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "final_defn"
+          "name": "statement"
         },
         {
           "type": "SYMBOL",
@@ -1952,6 +1957,10 @@
         {
           "type": "SYMBOL",
           "name": "match_stmt"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "final_defn"
         }
       ]
     },
@@ -1983,18 +1992,6 @@
     "local_var_decl_stmt": {
       "type": "SEQ",
       "members": [
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "final"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
         {
           "type": "SYMBOL",
           "name": "typed_binding_pattern"

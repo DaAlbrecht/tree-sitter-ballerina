@@ -58,7 +58,7 @@ function foo() {
             (decimal_number
              (non_zero_digit)))))))))
      (statement
-      (local_var_decl_stmt
+      (final_defn
        (typed_binding_pattern
         (inferable_type_desc
          (type_desc

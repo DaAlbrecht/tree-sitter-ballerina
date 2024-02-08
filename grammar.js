@@ -9,18 +9,24 @@ module.exports = grammar({
     rules: {
         source_file: $ => $.module_part,
         module_part: $ => seq(repeat($.import_decl), repeat1($.module_defn)),
-        import_decl: $ => seq("import", optional(seq($.org_name, "/")), $.module_name, optional(seq("as", $.import_prefix)), ";"),
+        //TODO: use this import specification with swan lake, 1.2 has a different import syntax
+        //import_decl: $ => seq("import", optional(seq($.org_name, "/")), $.module_name, optional(seq("as", $.import_prefix)), ";"),
+        import_decl: $ => seq("import", optional(seq($.org_name, "/")), $.module_name, ";"),
         org_name: $ => $.identifier,
         module_name: $ => choice(
             $.identifier,
-            seq($.module_name, ".", $.identifier)
+            seq($.module_name, ".",
+                choice(
+                    seq("'", $.identifier, "as", $.identifier),
+                    $.identifier)
+            )
         ),
         import_prefix: $ => $.identifier,
         module_defn: $ => choice(
             $.function_defn,
             $.const_defn,
             $.type_defn,
-            $.final_defn,
+            $.statement,
             $.class_defn,
             $.enum_decl,
         ),
@@ -150,7 +156,7 @@ module.exports = grammar({
         )),
         // This is a hack to make types like string:Char to work
         // otherwise it will match up the string and break
-        builtin_type_qualified_identifier: $=> seq(
+        builtin_type_qualified_identifier: $ => seq(
             $.builtin_type_name, ":", $.identifier
         ),
         map_type_desc: $ => seq("map", "<", $.type_desc, ">"),
@@ -179,8 +185,8 @@ module.exports = grammar({
         tuple_rest_desc: $ => seq($.type_desc, "..."),
 
         param_list: $ => choice(seq($.param, repeat(seq(",", $.param)), repeat(seq(",", $.defaultable_param)), repeat(seq(",", $.include_record_param)), optional(seq(",", $.rest_param))),
-                                seq($.defaultable_param, repeat(seq(",", $.defaultable_param)), repeat(seq(",", $.include_record_param)), optional(seq(",", $.rest_param))),
-                                $.rest_param),
+            seq($.defaultable_param, repeat(seq(",", $.defaultable_param)), repeat(seq(",", $.include_record_param)), optional(seq(",", $.rest_param))),
+            $.rest_param),
         param: $ => seq($.type_desc, optional($.identifier)),
         defaultable_param: $ => seq($.param, "=", $.expression),
         include_record_param: $ => seq("*", $.type_reference, $.identifier),
@@ -202,11 +208,12 @@ module.exports = grammar({
             $.continue_stmt,
             $.foreach_stmt,
             $.panic_stmt,
-            $.match_stmt
+            $.match_stmt,
+            $.final_defn
         ),
 
         local_no_init_var_decl_stmt: $ => seq(optional("final"), $.typed_binding_pattern, ";"),
-        local_var_decl_stmt: $ => seq(optional("final"), $.typed_binding_pattern, "=", $.expression, ";"),
+        local_var_decl_stmt: $ => seq($.typed_binding_pattern, "=", $.expression, ";"),
         binding_pattern: $ => choice(
             $.identifier,
             $.wildcard_binding_pattern
@@ -260,7 +267,7 @@ module.exports = grammar({
             $.const_reference_expr
         )),
 
-        simple_const_no_ref_expr: $ => choice (
+        simple_const_no_ref_expr: $ => choice(
             $.literal,
             seq("-", $.int_literal),
             seq("-", $.floating_point_literal),

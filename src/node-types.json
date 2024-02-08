@@ -1356,30 +1356,11 @@
       "required": true,
       "types": [
         {
-          "type": "import_prefix",
-          "named": true
-        },
-        {
           "type": "module_name",
           "named": true
         },
         {
           "type": "org_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "import_prefix",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
           "named": true
         }
       ]
@@ -2039,11 +2020,11 @@
           "named": true
         },
         {
-          "type": "final_defn",
+          "type": "function_defn",
           "named": true
         },
         {
-          "type": "function_defn",
+          "type": "statement",
           "named": true
         },
         {
@@ -3073,6 +3054,10 @@
           "named": true
         },
         {
+          "type": "final_defn",
+          "named": true
+        },
+        {
           "type": "foreach_stmt",
           "named": true
         },
@@ -3502,6 +3487,10 @@
   },
   {
     "type": "&&",
+    "named": false
+  },
+  {
+    "type": "'",
     "named": false
   },
   {
